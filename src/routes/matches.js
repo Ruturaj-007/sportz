@@ -39,14 +39,13 @@ matchRouter.post('/', async(req, res) => {
     
     if (!parsed.success) {
         return res.status(400).json({
-            error: 'Invalid Payload.', details: JSON.stringify(parsed.error)
+            error: 'Invalid Payload.',
+            details: parsed.error.issues
         })
     }
     
     // destructuring the data
     const {startTime, endTime, homeScore, awayScore } = parsed.data
-
-
 
     try {
         const [event] = await db.insert(matches).values({
@@ -59,7 +58,7 @@ matchRouter.post('/', async(req, res) => {
         }).returning();
 
         res.status(200).json({data: event})
-    } catch (e) {
+    } catch (e) { 
         res.status(500).json({
             error: 'Failed to create match.',
             details: e.message
