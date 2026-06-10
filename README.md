@@ -16,26 +16,6 @@
 
 </div>
 
----
-
-## Table of Contents
-
-1. [Overview](#-overview)
-2. [Live Preview](#-live-preview)
-3. [Architecture](#-architecture)
-4. [Tech Stack](#️-tech-stack)
-5. [Features](#-features)
-6. [Quick Start](#-quick-start)
-7. [REST API Reference](#-rest-api-reference)
-8. [WebSocket Protocol](#-websocket-protocol)
-9. [Security — Arcjet Bot Protection](#-security--arcjet-bot-protection)
-10. [Monitoring — Site24x7 APM](#-monitoring--site24x7-apm)
-11. [Scaling to Multi-Instance](#-scaling-to-multi-instance)
-12. [Environment Variables](#-environment-variables)
-13. [Project Structure](#-project-structure)
-
----
-
 ## Overview
 
 **Sportz** is a backend service built for live sports coverage. It exposes REST endpoints for match and commentary management and uses WebSockets to push real-time score and play-by-play updates to connected clients with zero polling overhead.
@@ -92,6 +72,26 @@ When scaling horizontally, individual servers don't share WebSocket state. A Pub
 This decouples servers completely — Server 1 never needs to know Server 2 exists.
 
 > **Note:** Auth is intentionally omitted in this project to keep focus on WebSocket mechanics and architecture.
+
+---
+
+## Table of Contents
+
+1. [Overview](#-overview)
+2. [Live Preview](#-live-preview)
+3. [Architecture](#-architecture)
+4. [Tech Stack](#️-tech-stack)
+5. [Features](#-features)
+6. [Quick Start](#-quick-start)
+7. [REST API Reference](#-rest-api-reference)
+8. [WebSocket Protocol](#-websocket-protocol)
+9. [Security — Arcjet Bot Protection](#-security--arcjet-bot-protection)
+10. [Monitoring — Site24x7 APM](#-monitoring--site24x7-apm)
+11. [Scaling to Multi-Instance](#-scaling-to-multi-instance)
+12. [Environment Variables](#-environment-variables)
+13. [Project Structure](#-project-structure)
+
+---
 
 ---
 
