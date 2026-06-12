@@ -57,6 +57,11 @@ matchRouter.post('/', async(req, res) => {
             status: getMatchStatus(startTime, endTime), 
         }).returning();
 
+        // Pushing new match data to all connected fans 
+        if (res.app.locals.broadcastMatchCreated) {
+            res.app.locals.broadcastMatchCreated(event); 
+        }
+
         res.status(200).json({data: event})
     } catch (e) { 
         console.error(e);
