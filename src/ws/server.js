@@ -1,4 +1,6 @@
 import { WebSocket, WebSocketServer } from "ws"; 
+import { wsArcjet } from "../arcjet.js";
+import { desc } from "drizzle-orm";
 
 function sendJson(socket, payload) {
     if (socket.readyState !== WebSocket.OPEN) {
@@ -22,7 +24,31 @@ export function attachWebSocketServer(server) {
     const wss = new WebSocketServer({ server, path: '/ws', maxPayload: 1024 * 1024 });
 
     // When someone connects (wss.on('connection')):
-    wss.on('connection', (socket) => {
+    wss.on('connection', async (socket, req) => {
+    if (wsArcjet) {
+       try {
+            const decision = await wsArcjet.protect(req);
+
+            if (decision.isDenied()) {
+                if (decision.reason.isRateLimit()) {
+                    console.log("RATE LIMIT HIT");
+                    socket.write('HTTP/1.1 429 Too Many Requests\r\n\r\n');
+                } 
+                else {
+                    socket.write('HTTP/1.1 403 Forbidden\r\n\r\n');
+                    error: "Forbidden"
+                }
+                socket.destroy();
+                return;
+            }
+       } catch (error) {
+            console.error('WS upgrade protection error', error);
+            socket.write('HTTP/1.1 500 Internal Server Error\r\n\r\n');
+            socket.destroy();
+            return;
+       } 
+    }
+
        socket.isAlive = true;
        socket.on('pong', () => {
             socket.isAlive = true;
