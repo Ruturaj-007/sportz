@@ -34,6 +34,10 @@ server.listen(PORT, HOST, () => {
 
     console.log(`Server is running on ${baseUrl}`);
     console.log(`WebSocket Server is running on ${baseUrl.replace('http', 'ws')}/ws`);
+    console.log(`Server running on port ${PORT}`);
+    console.log(`Health: https://sportz-8zce.onrender.com/healthz`);
+    console.log(`API: https://sportz-8zce.onrender.com`);
+    console.log(`WS: wss://sportz-8zce.onrender.com/ws`);
 });
 
 app.get('/healthz', (req, res) => {
