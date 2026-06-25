@@ -2,6 +2,7 @@
 // Normalizes all ESPN responses into common Match/Team/News/Standing shapes
 
 const BASE = 'https://site.api.espn.com/apis/site/v2/sports';
+const BASE_V2 = 'https://site.api.espn.com/apis/v2/sports';
 
 const SPORTS = {
   nba:  { path: 'basketball/nba',   label: 'NBA' },
@@ -159,10 +160,26 @@ export const ESPNProvider = {
 
     const results = await Promise.allSettled(
       sports.map(async s => {
-        const data = await espnFetch(`${BASE}/${SPORTS[s].path}/standings`);
-        const entries = data.standings?.entries ?? data.children?.flatMap(c =>
-          c.standings?.entries ?? []
-        ) ?? [];
+        // v2 base returns full standings; site/v2 returns stub with only fullViewLink
+        const data = await espnFetch(`${BASE_V2}/${SPORTS[s].path}/standings`);
+
+        // ESPN returns standings in different shapes per sport — handle all of them
+        let entries = [];
+
+        if (data.standings?.entries?.length) {
+          // flat shape
+          entries = data.standings.entries;
+        } else if (data.children?.length) {
+          // grouped by conference/division — flatten all
+          entries = data.children.flatMap(c =>
+            c.standings?.entries ??
+            c.children?.flatMap(cc => cc.standings?.entries ?? []) ??
+            []
+          );
+        } else if (data.entries?.length) {
+          entries = data.entries;
+        }
+
         return entries.map(e => normalizeStanding(e, s));
       })
     );
