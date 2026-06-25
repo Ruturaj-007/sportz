@@ -156,5 +156,9 @@ export function attachWebSocketServer(server) {
         broadcastToMatch(matchId, { type: 'commentary', data: comment });
     }
 
-    return { broadcastMatchCreated, broadcastCommentary };
+    function _broadcastToAll(payload) {
+        broadcastToAll(wss, payload);
+    }
+
+    return { broadcastMatchCreated, broadcastCommentary, broadcastToAll: _broadcastToAll };
 }
